@@ -14,16 +14,35 @@
   // boundaries so "email", "again", "chair", "said" never trigger. Everything else
   // is matched case-insensitively. See matcher.js.
   const DEFAULT_KEYWORDS = [
+    // Core / English
     "artificial intelligence",
     "AI",
     "AGI",
     "LLM",
+    "GPT",
     "large language model",
     "generative AI",
     "genai",
     "AI-generated",
     "AI-powered",
+    "AI model",
+    "AI agent",
+    "AI coding",
+    "AI tool",
     "AI slop",
+    "agentic",
+    "coding agent",
+    "chatbot",
+    "prompt engineering",
+    "neural network",
+    "machine learning",
+    "deep learning",
+    "diffusion model",
+    // German (user's feeds are often German — "KI" = Künstliche Intelligenz)
+    "KI",
+    "Künstliche Intelligenz",
+    "Sprachmodell",
+    // Products / vendors
     "ChatGPT",
     "GPT-4",
     "GPT-5",
@@ -36,9 +55,12 @@
     "Stable Diffusion",
     "DALL·E",
     "Sora",
-    "prompt engineering",
-    "neural network",
-    "machine learning",
+    "Mistral",
+    "Grok",
+    "Perplexity",
+    "Hugging Face",
+    "DeepSeek",
+    "Qwen",
   ];
 
   const DEFAULT_SETTINGS = {

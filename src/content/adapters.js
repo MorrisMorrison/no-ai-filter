@@ -23,7 +23,7 @@
       // fallback for older shreddit; the others cover the React redesign and old.reddit.
       // (Nested matches are de-duped by the ancestor guard in content.js.)
       itemSelector:
-        'article, shreddit-post, [data-testid="post-container"], .thing.link',
+        'article, shreddit-post, shreddit-ad-post, [data-testid="post-container"], .thing.link, .thing.promoted',
       textOf: text,
     },
     {
@@ -42,8 +42,11 @@
     {
       name: "youtube",
       hosts: ["youtube.com"],
+      // Home grid = ytd-rich-item-renderer; search = ytd-video-renderer; sidebar =
+      // ytd-compact-video-renderer; plus reels, shorts, the newer lockup view-model,
+      // and in-feed ad slots.
       itemSelector:
-        "ytd-rich-item-renderer, ytd-video-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-reel-item-renderer",
+        "ytd-rich-item-renderer, ytd-video-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-reel-item-renderer, ytd-rich-grid-slim-media, yt-lockup-view-model, ytd-ad-slot-renderer",
       textOf: text,
     },
     {

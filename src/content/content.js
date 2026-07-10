@@ -44,12 +44,18 @@
         el.dataset.noai = "seen";
         continue;
       }
-      const matched = matcher.matches(adapter.textOf(el), compiled);
-      if (matched) {
+      const content = adapter.textOf(el);
+      if (matcher.matches(content, compiled)) {
         hide(el, adapter);
         sessionCount++;
+        el.dataset.noai = "hit";
+      } else if (content && content.trim().length > 0) {
+        // Only mark as permanently-evaluated once real text exists. Feeds render
+        // empty tile shells first and hydrate the title a moment later — tagging an
+        // empty shell "seen" would skip it forever. Leaving it untagged lets the next
+        // observer pass re-check it once the title arrives.
+        el.dataset.noai = "seen";
       }
-      el.dataset.noai = matched ? "hit" : "seen";
     }
     report();
   }

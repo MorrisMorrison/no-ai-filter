@@ -20,6 +20,11 @@ test("matches obvious AI content", () => {
     "AI-generated artwork",
     "Is AGI near?",
     "running an LLM locally",
+    // regression cases from real feed screenshots:
+    "Wer auf proprietäre KI-Modelle setzt, riskiert alles", // German "AI models"
+    "I found what's missing in agentic development",
+    "Meet IBM Bob. An AI coding agent for real workflows",
+    "Mistral-Gründer über Künstliche Intelligenz",
   ]) {
     assert.ok(hit(s), `expected MATCH: ${s}`);
   }
@@ -33,6 +38,7 @@ test("does NOT match ordinary text containing a-i letters", () => {
     "a brilliant sunrise over the bay",
     "the aircraft gained altitude", // "ai" inside words, lowercase
     "I need a haircut and a coffee",
+    "Kinder spielen mit der Kiste im Park", // German: "KI" only as capitalized-word start, not standalone
   ]) {
     assert.ok(!hit(s), `expected NO match: ${s}`);
   }
