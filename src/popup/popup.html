@@ -34,6 +34,16 @@
       input:checked + .slider { background: #2ea043; }
       input:checked + .slider::before { transform: translateX(16px); }
       .footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(128,128,128,.25); }
+      .linkrow { display: flex; justify-content: space-between; }
+      #log {
+        margin-top: 8px; max-height: 180px; overflow-y: auto;
+        border-top: 1px solid rgba(128,128,128,.25); display: none;
+      }
+      #log.show { display: block; }
+      .logitem { padding: 6px 0; border-bottom: 1px solid rgba(128,128,128,.15); }
+      .logitem .why { font-size: 11px; opacity: .6; }
+      .logitem .txt { font-size: 12px; }
+      #log:empty::after { content: "Nothing hidden yet."; opacity: .6; }
     </style>
   </head>
   <body>
@@ -56,11 +66,21 @@
     </div>
 
     <div class="row">
-      <span class="muted">Hidden on this page</span>
-      <span class="count" id="count">0</span>
+      <span>Reveal filtered (outline)</span>
+      <label class="switch">
+        <input type="checkbox" id="reveal" />
+        <span class="slider"></span>
+      </label>
     </div>
 
-    <div class="footer muted">
+    <div class="row">
+      <span class="muted">Hidden on this page</span>
+      <span class="count"><a href="#" id="toggleLog"><span id="count">0</span> — view</a></span>
+    </div>
+
+    <div id="log"></div>
+
+    <div class="footer muted linkrow">
       <a href="#" id="options">Edit keywords &amp; sites →</a>
     </div>
 

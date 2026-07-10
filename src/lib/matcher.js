@@ -34,17 +34,32 @@
     return new RegExp(list.map(pattern).join("|"), flags);
   }
 
-  // Compile a keyword array into a pair of regexes: one case-sensitive (acronyms),
-  // one case-insensitive (everything else). Returns { cs, ci }.
+  // A power-user entry written as /pattern/flags is treated as a raw regex.
+  function asRawRegex(kw) {
+    const m = /^\/(.+)\/([a-z]*)$/i.exec(kw);
+    if (!m) return null;
+    try {
+      // Strip the 'g' flag — global regexes carry lastIndex state across .test() calls.
+      return new RegExp(m[1], m[2].replace("g", ""));
+    } catch (_) {
+      return null; // invalid regex — ignore rather than break the whole list
+    }
+  }
+
+  // Compile a keyword array into: a case-sensitive regex (acronyms), a case-insensitive
+  // regex (everything else), and an array of user-supplied raw regexes.
   function compile(keywords) {
     const cs = [];
     const ci = [];
+    const rx = [];
     for (const raw of keywords || []) {
       const kw = String(raw).trim();
       if (!kw) continue;
-      (isAcronym(kw) ? cs : ci).push(kw);
+      const custom = asRawRegex(kw);
+      if (custom) rx.push(custom);
+      else (isAcronym(kw) ? cs : ci).push(kw);
     }
-    return { cs: build(cs, ""), ci: build(ci, "i") };
+    return { cs: build(cs, ""), ci: build(ci, "i"), rx };
   }
 
   // Does the text contain any keyword? Uses .test() with non-global regexes (no
@@ -53,8 +68,24 @@
     if (!text || !compiled) return false;
     if (compiled.cs && compiled.cs.test(text)) return true;
     if (compiled.ci && compiled.ci.test(text)) return true;
+    if (compiled.rx) {
+      for (const r of compiled.rx) if (r.test(text)) return true;
+    }
     return false;
   }
 
-  return { compile, matches, escapeRegExp, pattern, isAcronym };
+  // Like matches(), but returns the actual matched substring (for logging which
+  // keyword fired) or null. Regexes are non-global, so .exec() has no lingering state.
+  function firstMatch(text, compiled) {
+    if (!text || !compiled) return null;
+    const all = [compiled.cs, compiled.ci, ...(compiled.rx || [])];
+    for (const r of all) {
+      if (!r) continue;
+      const m = r.exec(text);
+      if (m) return m[0];
+    }
+    return null;
+  }
+
+  return { compile, matches, firstMatch, escapeRegExp, pattern, isAcronym, asRawRegex };
 });

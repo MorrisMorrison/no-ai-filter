@@ -6,9 +6,15 @@ and search results — across social feeds, YouTube, and news/search sites.
 ## What it does
 
 - Scans supported pages and hides any feed item whose text mentions AI topics.
+- Reads image `alt`/`aria-label` text too, so image-only promoted ads are caught.
+- **Blocks whole sources** — subreddits (`r/ChatGPT`), YouTube channels (`@handle`),
+  or link domains (`the-decoder.de`) — regardless of wording.
+- **Strips Google's "AI Overview"** answer block (EN + German "KI-Übersicht").
 - Keeps up with infinite scroll via a throttled `MutationObserver`.
-- Shows a badge count of items hidden on the current tab.
-- Lets you toggle filtering globally or per-site, and edit the keyword list.
+- Shows a badge count of items hidden on the current tab, plus a **reveal toggle** and a
+  **hidden-items log** in the popup so you can audit what was filtered.
+- **Hide** or **blur** matches (your choice); toggle filtering globally or per-site.
+- Editable keyword list with **regex support** (`/gpt-?[0-9]/i`) and German terms built in.
 
 ### Supported sites (tuned adapters)
 
@@ -35,17 +41,26 @@ Naive substring matching on `AI` would hit *email*, *again*, *chair*, *said*. In
 
 ## Test
 
-The matcher is pure and unit-tested (no build step, no dependencies):
+The matcher is pure and unit-tested (no build step, no dependencies for tests; CI runs
+these on every push):
 
 ```bash
 node --test
 ```
 
+Optional lint/package (needs `npm install`, pulls in `web-ext`):
+
+```bash
+npm run lint     # web-ext lint
+npm run build    # produces a zip in dist/ for the Chrome Web Store
+```
+
 ## Configure
 
-- **Popup** (toolbar icon): master on/off, disable on the current site, hidden count.
-- **Options** (link in the popup): edit keywords (one per line), toggle sites, generic
-  mode, reset to defaults.
+- **Popup** (toolbar icon): master on/off, disable on the current site, hidden count,
+  reveal-filtered toggle, and the hidden-items log.
+- **Options** (link in the popup): edit keywords (+ regex) and blocked sources, choose
+  hide vs blur, toggle Google AI Overview stripping, per-site toggles, reset to defaults.
 
 ## Project layout
 

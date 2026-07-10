@@ -60,3 +60,22 @@ test("compile handles empty keyword list", () => {
   const c = matcher.compile([]);
   assert.ok(!matcher.matches("anything about AI", c));
 });
+
+test("supports raw /regex/ keyword entries", () => {
+  const c = matcher.compile(["/gpt-?[0-9]/i"]);
+  assert.ok(matcher.matches("the GPT4 release", c));
+  assert.ok(matcher.matches("gpt-5 is out", c));
+  assert.ok(!matcher.matches("a plain sentence", c));
+});
+
+test("an invalid regex entry is ignored, not fatal", () => {
+  const c = matcher.compile(["/([unclosed/", "ChatGPT"]);
+  assert.ok(matcher.matches("ChatGPT news", c), "valid entries still work");
+  assert.ok(!matcher.matches("nothing here", c));
+});
+
+test("firstMatch returns the matched keyword for logging", () => {
+  const c = matcher.compile(DEFAULT_KEYWORDS);
+  assert.equal(matcher.firstMatch("all about ChatGPT today", c), "ChatGPT");
+  assert.equal(matcher.firstMatch("nothing relevant", c), null);
+});

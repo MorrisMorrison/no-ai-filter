@@ -66,8 +66,15 @@
   const DEFAULT_SETTINGS = {
     enabled: true,
     keywords: DEFAULT_KEYWORDS,
+    // Block whole sources regardless of text: subreddits ("r/ChatGPT"), YouTube
+    // channels, or link domains ("the-decoder.de"). Case-insensitive substring match.
+    blockedSources: [],
     // Hostnames where the user has turned filtering off (per-site toggle in the popup).
     disabledSites: [],
+    // "hide" removes matched items; "blur" obscures them with a click-to-reveal.
+    action: "hide",
+    // Strip Google's injected "AI Overview" / "KI-Übersicht" answer block.
+    hideGoogleAiOverview: true,
     // Experimental: apply a best-effort generic adapter on supported hosts where no
     // specific adapter matched. Off by default (more false positives).
     genericMode: false,

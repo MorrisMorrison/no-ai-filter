@@ -1,0 +1,15 @@
+{
+  "name": "no-ai-filter",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Chrome/Edge MV3 extension that hides AI-related content across social feeds, YouTube, and news/search.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test",
+    "lint": "web-ext lint --source-dir . --ignore-files test/** scripts/** .github/**",
+    "build": "web-ext build --source-dir . --ignore-files test/** scripts/** .github/** --overwrite-dest --artifacts-dir dist"
+  },
+  "devDependencies": {
+    "web-ext": "^8.3.0"
+  }
+}

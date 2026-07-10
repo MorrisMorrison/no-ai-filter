@@ -30,6 +30,10 @@
       .saved { color: #2ea043; opacity: 0; transition: opacity .2s; }
       .saved.show { opacity: 1; }
       .checkline { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+      textarea.short { min-height: 90px; }
+      .radios { display: flex; gap: 18px; margin: 4px 0 8px; }
+      .radios label { display: flex; align-items: center; gap: 6px; }
+      code { background: rgba(128,128,128,.18); padding: 1px 5px; border-radius: 4px; }
     </style>
   </head>
   <body>
@@ -40,9 +44,30 @@
       One per line. A post/video/result is hidden if its text contains any of these.
       Plain uppercase entries (AI, AGI, LLM) match case-sensitively with word boundaries,
       so “email”, “again”, and “chair” won’t trigger. Everything else matches
-      case-insensitively.
+      case-insensitively. Power users: wrap an entry in slashes for a raw regex, e.g.
+      <code>/gpt-?[0-9]/i</code>.
     </p>
     <textarea id="keywords" spellcheck="false"></textarea>
+
+    <h2>Blocked sources</h2>
+    <p class="help">
+      One per line. Hides anything from these sources regardless of wording — subreddits
+      (<code>r/ChatGPT</code>), YouTube channels (<code>@somechannel</code> or the channel
+      name), or link domains (<code>the-decoder.de</code>). Case-insensitive.
+    </p>
+    <textarea id="sources" class="short" spellcheck="false"
+      placeholder="r/artificial&#10;the-decoder.de"></textarea>
+
+    <h2>When something matches</h2>
+    <div class="radios">
+      <label><input type="radio" name="action" value="hide" /> Hide it completely</label>
+      <label><input type="radio" name="action" value="blur" /> Blur it (hover to reveal)</label>
+    </div>
+
+    <div class="checkline">
+      <input type="checkbox" id="aioverview" />
+      <label for="aioverview">Strip Google’s “AI Overview” answer block from search results</label>
+    </div>
 
     <h2>Sites</h2>
     <p class="help">Turn filtering on or off per supported site.</p>

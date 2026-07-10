@@ -49,6 +49,40 @@ async function init() {
     e.preventDefault();
     chrome.runtime.openOptionsPage();
   });
+
+  // --- Reveal toggle: ask the content script to outline filtered items ---
+  $("reveal").addEventListener("change", (e) => {
+    if (tab) chrome.tabs.sendMessage(tab.id, { type: "noai:reveal", on: e.target.checked });
+  });
+
+  // --- Hidden log: pull the audit trail from the content script on demand ---
+  const logEl = $("log");
+  $("toggleLog").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (logEl.classList.contains("show")) {
+      logEl.classList.remove("show");
+      return;
+    }
+    logEl.classList.add("show");
+    if (!tab) return;
+    chrome.tabs.sendMessage(tab.id, { type: "noai:getLog" }, (res) => {
+      if (chrome.runtime.lastError || !res) return;
+      $("count").textContent = res.count;
+      logEl.innerHTML = "";
+      for (const item of res.log) {
+        const div = document.createElement("div");
+        div.className = "logitem";
+        const txt = document.createElement("div");
+        txt.className = "txt";
+        txt.textContent = item.text;
+        const why = document.createElement("div");
+        why.className = "why";
+        why.textContent = item.reason;
+        div.append(txt, why);
+        logEl.append(div);
+      }
+    });
+  });
 }
 
 init();

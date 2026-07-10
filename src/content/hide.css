@@ -1,4 +1,25 @@
-/* The one job of the content CSS: make matched items vanish without reflow jank. */
+/* Hide mode: matched items vanish. */
 .noai-hidden {
   display: none !important;
+}
+
+/* Blur mode: matched items stay in layout but obscured; hover to peek. */
+.noai-blurred {
+  filter: blur(8px) !important;
+  transition: filter 0.15s ease;
+  cursor: pointer;
+}
+.noai-blurred:hover {
+  filter: none !important;
+}
+
+/* Reveal mode (toggled from the popup): show everything that was filtered, marked
+   with a dashed red outline so you can audit what the filter caught. */
+html.noai-show-hidden .noai-hidden {
+  display: revert !important;
+}
+html.noai-show-hidden .noai-filtered {
+  filter: none !important;
+  outline: 2px dashed #d33333 !important;
+  outline-offset: -2px;
 }

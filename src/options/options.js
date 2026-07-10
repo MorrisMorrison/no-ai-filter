@@ -21,8 +21,19 @@ function renderSites(settings) {
 
 function load(settings) {
   $("keywords").value = settings.keywords.join("\n");
+  $("sources").value = (settings.blockedSources || []).join("\n");
   $("generic").checked = settings.genericMode;
+  $("aioverview").checked = settings.hideGoogleAiOverview;
+  const action = settings.action === "blur" ? "blur" : "hide";
+  document.querySelector(`input[name="action"][value="${action}"]`).checked = true;
   renderSites(settings);
+}
+
+function linesOf(id) {
+  return $(id)
+    .value.split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 async function init() {
@@ -30,11 +41,6 @@ async function init() {
   load(settings);
 
   $("save").addEventListener("click", async () => {
-    const keywords = $("keywords")
-      .value.split("\n")
-      .map((s) => s.trim())
-      .filter(Boolean);
-
     // Preserve any per-site disables the options page doesn't manage (e.g. added via
     // the popup on an unsupported host), then apply the checkbox states.
     let disabledSites = settings.disabledSites.filter(
@@ -45,9 +51,12 @@ async function init() {
     }
 
     await storage.setSettings({
-      keywords,
+      keywords: linesOf("keywords"),
+      blockedSources: linesOf("sources"),
       disabledSites,
       genericMode: $("generic").checked,
+      hideGoogleAiOverview: $("aioverview").checked,
+      action: document.querySelector('input[name="action"]:checked').value,
     });
     flashSaved();
   });
