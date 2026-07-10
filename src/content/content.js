@@ -37,6 +37,13 @@
 
     for (const el of document.querySelectorAll(adapter.itemSelector)) {
       if (el.dataset.noai) continue; // already evaluated
+      // Skip anything already inside a hidden item — avoids re-processing and
+      // double-counting nested matches (e.g. a <shreddit-post> within a hidden
+      // <article>). querySelectorAll returns ancestors first, so it's already gone.
+      if (el.closest(".noai-hidden")) {
+        el.dataset.noai = "seen";
+        continue;
+      }
       const matched = matcher.matches(adapter.textOf(el), compiled);
       if (matched) {
         hide(el, adapter);

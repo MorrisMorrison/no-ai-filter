@@ -17,9 +17,13 @@
     {
       name: "reddit",
       hosts: ["reddit.com"],
-      // New Reddit (web component), newer React, and old.reddit respectively.
+      // Current Reddit wraps every feed card — organic AND promoted/ad — in an
+      // <article>; only the inner custom element differs (shreddit-post vs
+      // shreddit-ad-post). Targeting <article> catches both. shreddit-post is a
+      // fallback for older shreddit; the others cover the React redesign and old.reddit.
+      // (Nested matches are de-duped by the ancestor guard in content.js.)
       itemSelector:
-        'shreddit-post, [data-testid="post-container"], .thing.link',
+        'article, shreddit-post, [data-testid="post-container"], .thing.link',
       textOf: text,
     },
     {
