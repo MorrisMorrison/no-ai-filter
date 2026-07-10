@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>No-AI Filter — Options</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        max-width: 640px; margin: 32px auto; padding: 0 20px;
+        font: 14px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+      }
+      h1 { font-size: 20px; display: flex; align-items: center; gap: 10px; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; background: #d33333; }
+      h2 { font-size: 15px; margin: 28px 0 8px; }
+      p.help { opacity: .7; margin: 4px 0 12px; }
+      textarea {
+        width: 100%; min-height: 240px; box-sizing: border-box; padding: 10px;
+        font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+        border: 1px solid rgba(128,128,128,.4); border-radius: 8px; resize: vertical;
+        background: canvas; color: canvastext;
+      }
+      .sites { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+      label.site { display: flex; align-items: center; gap: 8px; }
+      .actions { margin-top: 20px; display: flex; gap: 10px; align-items: center; }
+      button {
+        font: inherit; padding: 8px 14px; border-radius: 8px; cursor: pointer;
+        border: 1px solid rgba(128,128,128,.4); background: canvas; color: canvastext;
+      }
+      button.primary { background: #2ea043; color: #fff; border-color: transparent; }
+      .saved { color: #2ea043; opacity: 0; transition: opacity .2s; }
+      .saved.show { opacity: 1; }
+      .checkline { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    </style>
+  </head>
+  <body>
+    <h1><span class="dot"></span> No-AI Filter</h1>
+
+    <h2>Keywords</h2>
+    <p class="help">
+      One per line. A post/video/result is hidden if its text contains any of these.
+      Plain uppercase entries (AI, AGI, LLM) match case-sensitively with word boundaries,
+      so “email”, “again”, and “chair” won’t trigger. Everything else matches
+      case-insensitively.
+    </p>
+    <textarea id="keywords" spellcheck="false"></textarea>
+
+    <h2>Sites</h2>
+    <p class="help">Turn filtering on or off per supported site.</p>
+    <div class="sites" id="sites"></div>
+
+    <div class="checkline">
+      <input type="checkbox" id="generic" />
+      <label for="generic">
+        Generic mode (experimental) — also filter unmatched containers on supported sites.
+        More false positives.
+      </label>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="save">Save</button>
+      <button id="reset">Reset to defaults</button>
+      <span class="saved" id="saved">Saved ✓</span>
+    </div>
+
+    <script src="../lib/defaults.js"></script>
+    <script src="../lib/storage.js"></script>
+    <script src="../content/adapters.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

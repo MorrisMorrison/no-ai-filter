@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "No-AI Content Filter",
+  "version": "0.1.0",
+  "description": "Hides AI-related posts, videos and results across social feeds, YouTube, and news/search.",
+  "permissions": ["storage", "tabs"],
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.x.com/*",
+        "*://*.twitter.com/*",
+        "*://*.reddit.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.facebook.com/*",
+        "*://*.youtube.com/*",
+        "*://www.google.com/*",
+        "*://news.google.com/*",
+        "*://news.ycombinator.com/*"
+      ],
+      "js": [
+        "src/lib/defaults.js",
+        "src/lib/matcher.js",
+        "src/lib/storage.js",
+        "src/content/adapters.js",
+        "src/content/content.js"
+      ],
+      "css": ["src/content/hide.css"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

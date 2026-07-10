@@ -1,0 +1,4 @@
+/* The one job of the content CSS: make matched items vanish without reflow jank. */
+.noai-hidden {
+  display: none !important;
+}

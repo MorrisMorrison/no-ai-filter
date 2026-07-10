@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        width: 260px;
+        margin: 0;
+        padding: 14px 16px;
+        font: 13px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+      }
+      h1 { font-size: 14px; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; background: #d33333; }
+      .row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 8px 0; border-top: 1px solid rgba(128,128,128,.25);
+      }
+      .row:first-of-type { border-top: none; }
+      .muted { opacity: .7; }
+      .count { font-weight: 600; }
+      a { color: inherit; }
+      /* iOS-style toggle */
+      .switch { position: relative; width: 38px; height: 22px; }
+      .switch input { opacity: 0; width: 0; height: 0; }
+      .slider {
+        position: absolute; inset: 0; cursor: pointer;
+        background: #bbb; border-radius: 22px; transition: .2s;
+      }
+      .slider::before {
+        content: ""; position: absolute; height: 16px; width: 16px; left: 3px; top: 3px;
+        background: #fff; border-radius: 50%; transition: .2s;
+      }
+      input:checked + .slider { background: #2ea043; }
+      input:checked + .slider::before { transform: translateX(16px); }
+      .footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(128,128,128,.25); }
+    </style>
+  </head>
+  <body>
+    <h1><span class="dot"></span> No-AI Filter</h1>
+
+    <div class="row">
+      <span>Filtering enabled</span>
+      <label class="switch">
+        <input type="checkbox" id="enabled" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <span>Active on <strong id="host">this site</strong></span>
+      <label class="switch">
+        <input type="checkbox" id="site" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <span class="muted">Hidden on this page</span>
+      <span class="count" id="count">0</span>
+    </div>
+
+    <div class="footer muted">
+      <a href="#" id="options">Edit keywords &amp; sites →</a>
+    </div>
+
+    <script src="../lib/defaults.js"></script>
+    <script src="../lib/storage.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
