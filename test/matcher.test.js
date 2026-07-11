@@ -3,7 +3,7 @@
 const { test } = require("node:test");
 const assert = require("node:assert");
 const matcher = require("../src/lib/matcher.js");
-const { DEFAULT_KEYWORDS } = require("../src/lib/defaults.js");
+const { DEFAULT_KEYWORDS, DEFAULT_DEV_KEYWORDS } = require("../src/lib/defaults.js");
 
 const compiled = matcher.compile(DEFAULT_KEYWORDS);
 const hit = (s) => matcher.matches(s, compiled);
@@ -72,6 +72,34 @@ test("an invalid regex entry is ignored, not fatal", () => {
   const c = matcher.compile(["/([unclosed/", "ChatGPT"]);
   assert.ok(matcher.matches("ChatGPT news", c), "valid entries still work");
   assert.ok(!matcher.matches("nothing here", c));
+});
+
+test("no-work mode: dev keywords catch dev content", () => {
+  const c = matcher.compile(DEFAULT_DEV_KEYWORDS);
+  for (const s of [
+    "learning Python for data science",
+    "opened a pull request on GitHub",
+    "our REST API returns JSON",
+    "debugging a nasty stack trace",
+    "he just landed a software engineer role",
+    "deploying with Docker and Kubernetes",
+  ]) {
+    assert.ok(matcher.matches(s, c), `expected MATCH: ${s}`);
+  }
+});
+
+test("no-work mode: excluded ambiguous words don't false-positive", () => {
+  const c = matcher.compile(DEFAULT_DEV_KEYWORDS);
+  for (const s of [
+    "fans react to the shocking news",
+    "let's go to the beach this weekend",
+    "rust spots on the old car",
+    "a bug flew into the room",
+    "the waiter was a great server",
+    "just a quick coffee break",
+  ]) {
+    assert.ok(!matcher.matches(s, c), `expected NO match: ${s}`);
+  }
 });
 
 test("firstMatch returns the matched keyword for logging", () => {

@@ -21,6 +21,8 @@ function renderSites(settings) {
 
 function load(settings) {
   $("keywords").value = settings.keywords.join("\n");
+  $("devKeywords").value = (settings.devKeywords || []).join("\n");
+  $("hideDev").checked = settings.hideDev;
   $("sources").value = (settings.blockedSources || []).join("\n");
   $("generic").checked = settings.genericMode;
   $("aioverview").checked = settings.hideGoogleAiOverview;
@@ -52,6 +54,8 @@ async function init() {
 
     await storage.setSettings({
       keywords: linesOf("keywords"),
+      devKeywords: linesOf("devKeywords"),
+      hideDev: $("hideDev").checked,
       blockedSources: linesOf("sources"),
       disabledSites,
       genericMode: $("generic").checked,

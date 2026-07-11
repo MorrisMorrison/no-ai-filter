@@ -58,6 +58,20 @@
     <textarea id="sources" class="short" spellcheck="false"
       placeholder="r/artificial&#10;the-decoder.de"></textarea>
 
+    <h2>No-work mode</h2>
+    <div class="checkline">
+      <input type="checkbox" id="hideDev" />
+      <label for="hideDev">
+        Also hide software-development content (toggle quickly from the popup too)
+      </label>
+    </div>
+    <p class="help">
+      Dev/work keywords, one per line — only applied while No-work mode is on. Curated to
+      avoid everyday-word collisions; add aggressive bare terms (React, Go, Rust, code…)
+      at your own false-positive risk.
+    </p>
+    <textarea id="devKeywords" class="short" spellcheck="false"></textarea>
+
     <h2>When something matches</h2>
     <div class="radios">
       <label><input type="radio" name="action" value="hide" /> Hide it completely</label>

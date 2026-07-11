@@ -10,6 +10,8 @@ and search results — across social feeds, YouTube, and news/search sites.
 - **Blocks whole sources** — subreddits (`r/ChatGPT`), YouTube channels (`@handle`),
   or link domains (`the-decoder.de`) — regardless of wording.
 - **Strips Google's "AI Overview"** answer block (EN + German "KI-Übersicht").
+- **"No-work mode"** — an extra toggle that also hides software-development content
+  (its own editable keyword list, off by default), for turning a feed into pure downtime.
 - Keeps up with infinite scroll via a throttled `MutationObserver`.
 - Shows a badge count of items hidden on the current tab, plus a **reveal toggle** and a
   **hidden-items log** in the popup so you can audit what was filtered.

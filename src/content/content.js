@@ -139,7 +139,11 @@
 
   function applySettings(next) {
     settings = next;
-    compiled = matcher.compile(settings.keywords);
+    // "No-work mode" layers dev keywords on top of the AI list when enabled.
+    const words = settings.hideDev
+      ? [...settings.keywords, ...(settings.devKeywords || [])]
+      : settings.keywords;
+    compiled = matcher.compile(words);
     blockedSources = (settings.blockedSources || [])
       .map((s) => String(s).trim().toLowerCase())
       .filter(Boolean);

@@ -63,9 +63,102 @@
     "Qwen",
   ];
 
+  // "No-work mode" — software-development keywords, applied ONLY when hideDev is on.
+  // Curated toward high-signal, low-ambiguity terms: bare everyday-word collisions
+  // (React/Swift/Go/Rust/Java/code/bug/server/query/terminal) are deliberately left out
+  // so you can add them yourself if you want it more aggressive. Uppercase acronyms
+  // (API, SQL, CSS…) match case-sensitively, same trick as the AI list.
+  const DEFAULT_DEV_KEYWORDS = [
+    // concepts / roles / workflow
+    "software development",
+    "software engineer",
+    "software engineering",
+    "web development",
+    "app development",
+    "programming language",
+    "programming",
+    "programmer",
+    "coding",
+    "source code",
+    "codebase",
+    "open source",
+    "developer",
+    "DevOps",
+    "backend",
+    "frontend",
+    "full-stack",
+    "compiler",
+    "algorithm",
+    "data structure",
+    "design pattern",
+    "framework",
+    "microservices",
+    "serverless",
+    "kubernetes",
+    "docker",
+    "webpack",
+    "pull request",
+    "merge request",
+    "code review",
+    "stack trace",
+    "Stack Overflow",
+    "debugging",
+    "refactoring",
+    "unit test",
+    "continuous integration",
+    "CI/CD",
+    "REST API",
+    "GraphQL",
+    "webhook",
+    "endpoint",
+    "database",
+    "deployment",
+    "command line",
+    "shell script",
+    "git",
+    "git commit",
+    "GitHub",
+    "GitLab",
+    "Bitbucket",
+    "VS Code",
+    "Visual Studio",
+    "LeetCode",
+    // languages / frameworks (unambiguous ones only)
+    "JavaScript",
+    "TypeScript",
+    "Python",
+    "Golang",
+    "Kotlin",
+    "PostgreSQL",
+    "MongoDB",
+    "Django",
+    "Node.js",
+    "Angular",
+    "Svelte",
+    "Vue.js",
+    "React.js",
+    "Ruby on Rails",
+    "Spring Boot",
+    // acronyms (case-sensitive)
+    "API",
+    "SDK",
+    "CLI",
+    "IDE",
+    "SQL",
+    "HTML",
+    "CSS",
+    "JSON",
+    "OOP",
+    "TDD",
+    "ORM",
+  ];
+
   const DEFAULT_SETTINGS = {
     enabled: true,
     keywords: DEFAULT_KEYWORDS,
+    // "No-work mode": when on, devKeywords are filtered too (on top of the AI list).
+    hideDev: false,
+    devKeywords: DEFAULT_DEV_KEYWORDS,
     // Block whole sources regardless of text: subreddits ("r/ChatGPT"), YouTube
     // channels, or link domains ("the-decoder.de"). Case-insensitive substring match.
     blockedSources: [],
@@ -80,5 +173,5 @@
     genericMode: false,
   };
 
-  return { DEFAULT_KEYWORDS, DEFAULT_SETTINGS };
+  return { DEFAULT_KEYWORDS, DEFAULT_DEV_KEYWORDS, DEFAULT_SETTINGS };
 });

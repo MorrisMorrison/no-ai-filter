@@ -37,6 +37,11 @@ async function init() {
     storage.setSettings({ enabled: e.target.checked });
   });
 
+  $("hideDev").checked = settings.hideDev;
+  $("hideDev").addEventListener("change", (e) => {
+    storage.setSettings({ hideDev: e.target.checked });
+  });
+
   $("site").addEventListener("change", (e) => {
     // Drop any existing entry that matches this host, then re-add if now disabled.
     let ds = settings.disabledSites.filter((d) => !storage.matchHost(host, d));
