@@ -2,10 +2,12 @@
 const counts = {};
 
 function setBadge(tabId, n) {
-  chrome.action.setBadgeText({ tabId, text: n ? String(n) : "" });
+  // The tab may have closed or navigated between the content-script message and this
+  // call — setBadgeText then rejects with "No tab with id". That's expected; swallow it.
+  chrome.action.setBadgeText({ tabId, text: n ? String(n) : "" }).catch(() => {});
 }
 
-chrome.action.setBadgeBackgroundColor({ color: "#d33333" });
+chrome.action.setBadgeBackgroundColor({ color: "#d33333" }).catch(() => {});
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg) return;

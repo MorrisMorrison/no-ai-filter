@@ -57,7 +57,14 @@ async function init() {
 
   // --- Reveal toggle: ask the content script to outline filtered items ---
   $("reveal").addEventListener("change", (e) => {
-    if (tab) chrome.tabs.sendMessage(tab.id, { type: "noai:reveal", on: e.target.checked });
+    if (!tab) return;
+    // Reading lastError in the callback swallows "receiving end does not exist" on
+    // pages where the content script isn't injected.
+    chrome.tabs.sendMessage(
+      tab.id,
+      { type: "noai:reveal", on: e.target.checked },
+      () => void chrome.runtime.lastError
+    );
   });
 
   // --- Hidden log: pull the audit trail from the content script on demand ---
