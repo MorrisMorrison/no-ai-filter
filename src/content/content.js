@@ -9,10 +9,82 @@
   let compiled = null;
   let blockedSources = [];
   let sessionCount = 0;
+  let blockDismissed = false; // user peeked past the No-work wall (this page load only)
   const hiddenLog = []; // { text, reason } — audit trail shown in the popup
+
+  // Friendly names + rotating reminders for the full-page No-work block.
+  const SITE_NAMES = { "news.ycombinator.com": "Hacker News" };
+  const NOWORK_MESSAGES = [
+    "This is a no-work zone. {name} can wait. 🙅",
+    "You told me to keep you off {name}. You're welcome. 🍊",
+    "Nope — no-work mode is on. Go touch grass. 🌱",
+    "{name} during your break? Bold move. Close the tab.",
+    "The internet will survive without your hot take. Step away. ⏰",
+    "Reading {name} is just work cosplay. Take the break you scheduled.",
+    "Breathe. Stretch. Anything but {name}. 🧘",
+  ];
 
   function siteEnabled() {
     return settings && settings.enabled && !storage.isSiteDisabled(host, settings);
+  }
+
+  function siteName(h) {
+    const bare = h.replace(/^www\./, "");
+    return SITE_NAMES[bare] || bare;
+  }
+
+  // Should this whole host be walled off right now?
+  function noWorkBlocked() {
+    if (!(siteEnabled() && settings.hideDev)) return false;
+    return (settings.noWorkBlockSites || []).some((d) => {
+      d = String(d).trim().toLowerCase();
+      return d && (host === d || host.endsWith("." + d));
+    });
+  }
+
+  function renderBlock() {
+    if (blockDismissed || document.getElementById("noai-nowork-block")) return;
+    const name = siteName(host);
+    const msg = NOWORK_MESSAGES[Math.floor(Math.random() * NOWORK_MESSAGES.length)].replace(
+      /{name}/g,
+      name
+    );
+    const overlay = document.createElement("div");
+    overlay.id = "noai-nowork-block";
+
+    const card = document.createElement("div");
+    card.className = "noai-block-card";
+
+    const emoji = document.createElement("div");
+    emoji.className = "noai-block-emoji";
+    emoji.textContent = "🚫";
+
+    const h1 = document.createElement("div");
+    h1.className = "noai-block-msg";
+    h1.textContent = msg; // textContent — never inject markup
+
+    const sub = document.createElement("div");
+    sub.className = "noai-block-sub";
+    sub.textContent = "No-work mode is on.";
+
+    const dismiss = document.createElement("a");
+    dismiss.className = "noai-block-dismiss";
+    dismiss.href = "#";
+    dismiss.textContent = "…fine, let me peek";
+    dismiss.addEventListener("click", (e) => {
+      e.preventDefault();
+      blockDismissed = true;
+      removeBlock();
+    });
+
+    card.append(emoji, h1, sub, dismiss);
+    overlay.append(card);
+    (document.body || document.documentElement).appendChild(overlay);
+  }
+
+  function removeBlock() {
+    const el = document.getElementById("noai-nowork-block");
+    if (el) el.remove();
   }
 
   function activeAdapter() {
@@ -60,7 +132,16 @@
   }
 
   function process() {
-    if (!siteEnabled()) return;
+    if (!siteEnabled()) {
+      removeBlock();
+      return;
+    }
+    // No-work mode can wall off a whole site instead of filtering item-by-item.
+    if (noWorkBlocked()) {
+      renderBlock();
+      return;
+    }
+    removeBlock();
     const adapter = activeAdapter();
     if (!adapter) return;
 
@@ -110,6 +191,9 @@
     }
     hiddenLog.length = 0;
     sessionCount = 0;
+    // Re-arm the No-work wall — toggling settings should bring it back even if peeked past.
+    blockDismissed = false;
+    removeBlock();
   }
 
   function report() {

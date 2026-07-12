@@ -22,6 +22,7 @@ function renderSites(settings) {
 function load(settings) {
   $("keywords").value = settings.keywords.join("\n");
   $("devKeywords").value = (settings.devKeywords || []).join("\n");
+  $("noworkSites").value = (settings.noWorkBlockSites || []).join("\n");
   $("hideDev").checked = settings.hideDev;
   $("sources").value = (settings.blockedSources || []).join("\n");
   $("generic").checked = settings.genericMode;
@@ -55,6 +56,7 @@ async function init() {
     await storage.setSettings({
       keywords: linesOf("keywords"),
       devKeywords: linesOf("devKeywords"),
+      noWorkBlockSites: linesOf("noworkSites"),
       hideDev: $("hideDev").checked,
       blockedSources: linesOf("sources"),
       disabledSites,

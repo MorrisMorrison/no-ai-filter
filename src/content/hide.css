@@ -23,3 +23,50 @@ html.noai-show-hidden .noai-filtered {
   outline: 2px dashed #d33333 !important;
   outline-offset: -2px;
 }
+
+/* No-work mode full-page wall (e.g. Hacker News). */
+#noai-nowork-block {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  margin: 0 !important;
+  background: radial-gradient(circle at 50% 30%, #1b1b20, #0a0a0c) !important;
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  color: #eee !important;
+}
+#noai-nowork-block .noai-block-card {
+  max-width: 480px !important;
+  text-align: center !important;
+}
+#noai-nowork-block .noai-block-emoji {
+  font-size: 64px !important;
+  line-height: 1 !important;
+  margin-bottom: 20px !important;
+}
+#noai-nowork-block .noai-block-msg {
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  margin-bottom: 12px !important;
+}
+#noai-nowork-block .noai-block-sub {
+  font-size: 14px !important;
+  color: #ff6600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  margin-bottom: 28px !important;
+}
+#noai-nowork-block .noai-block-dismiss {
+  font-size: 13px !important;
+  color: #888 !important;
+  text-decoration: none !important;
+  border-bottom: 1px dotted #666 !important;
+  padding-bottom: 1px !important;
+}
+#noai-nowork-block .noai-block-dismiss:hover {
+  color: #bbb !important;
+}

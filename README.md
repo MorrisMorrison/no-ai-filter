@@ -12,6 +12,8 @@ and search results — across social feeds, YouTube, and news/search sites.
 - **Strips Google's "AI Overview"** answer block (EN + German "KI-Übersicht").
 - **"No-work mode"** — an extra toggle that also hides software-development content
   (its own editable keyword list, off by default), for turning a feed into pure downtime.
+  It can also **fully wall off whole sites** (Hacker News by default) with a cheeky
+  reminder overlay instead of filtering item-by-item.
 - Keeps up with infinite scroll via a throttled `MutationObserver`.
 - Shows a badge count of items hidden on the current tab, plus a **reveal toggle** and a
   **hidden-items log** in the popup so you can audit what was filtered.

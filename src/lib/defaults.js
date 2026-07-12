@@ -159,6 +159,9 @@
     // "No-work mode": when on, devKeywords are filtered too (on top of the AI list).
     hideDev: false,
     devKeywords: DEFAULT_DEV_KEYWORDS,
+    // Hosts that get fully replaced with a reminder overlay while No-work mode is on
+    // (instead of per-item filtering). Matched by suffix.
+    noWorkBlockSites: ["news.ycombinator.com"],
     // Block whole sources regardless of text: subreddits ("r/ChatGPT"), YouTube
     // channels, or link domains ("the-decoder.de"). Case-insensitive substring match.
     blockedSources: [],
