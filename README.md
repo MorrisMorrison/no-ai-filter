@@ -14,6 +14,9 @@ and search results — across social feeds, YouTube, and news/search sites.
   (its own editable keyword list, off by default), for turning a feed into pure downtime.
   It can also **fully wall off whole sites** (Hacker News by default) with a cheeky
   reminder overlay instead of filtering item-by-item.
+  - **GitHub work orgs:** name your work org(s) and, in No-work mode, their org page and
+    repos show the reminder overlay while their repos are hidden from GitHub
+    feeds/search — your private repos stay visible.
 - Keeps up with infinite scroll via a throttled `MutationObserver`.
 - Shows a badge count of items hidden on the current tab, plus a **reveal toggle** and a
   **hidden-items log** in the popup so you can audit what was filtered.

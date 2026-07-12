@@ -9,7 +9,7 @@
   let compiled = null;
   let blockedSources = [];
   let sessionCount = 0;
-  let blockDismissed = false; // user peeked past the No-work wall (this page load only)
+  let dismissedPath = null; // path the user peeked past; re-arms when the path changes
   const hiddenLog = []; // { text, reason } — audit trail shown in the popup
 
   // Friendly names + rotating reminders for the full-page No-work block.
@@ -42,9 +42,10 @@
     });
   }
 
-  function renderBlock() {
-    if (blockDismissed || document.getElementById("noai-nowork-block")) return;
-    const name = siteName(host);
+  function renderBlock(nameOverride) {
+    if (dismissedPath === location.pathname) return;
+    if (document.getElementById("noai-nowork-block")) return;
+    const name = nameOverride || siteName(host);
     const msg = NOWORK_MESSAGES[Math.floor(Math.random() * NOWORK_MESSAGES.length)].replace(
       /{name}/g,
       name
@@ -73,7 +74,7 @@
     dismiss.textContent = "…fine, let me peek";
     dismiss.addEventListener("click", (e) => {
       e.preventDefault();
-      blockDismissed = true;
+      dismissedPath = location.pathname;
       removeBlock();
     });
 
@@ -85,6 +86,55 @@
   function removeBlock() {
     const el = document.getElementById("noai-nowork-block");
     if (el) el.remove();
+  }
+
+  // --- GitHub work-org handling (No-work mode) ---------------------------------
+  const gh = globalThis.NoAI.github;
+  const isGitHub = () => host === "github.com" || host === "www.github.com";
+  const githubOrgs = () => gh.norm(settings.noWorkGitHubOrgs);
+
+  // The full list-item/row for a repo link. GitHub's result cards use hashed class
+  // names, so climb to a stable structural anchor instead (results-list child, <ul>
+  // item, or the profile repo list), falling back to the nearest li/article/.Box-row.
+  function githubResultContainer(a) {
+    let el = a;
+    for (let i = 0; i < 10 && el && el.parentElement; i++) {
+      const p = el.parentElement;
+      if (p.getAttribute && p.getAttribute("data-testid") === "results-list") return el;
+      if (p.id === "user-repositories-list") return el;
+      if (p.tagName === "UL" || p.tagName === "OL") return el;
+      el = p;
+    }
+    return a.closest("li, article, .Box-row, .feed-item");
+  }
+
+  // Hide list entries (dashboard feed, search, repo lists) that belong to a work org.
+  function filterGitHubList() {
+    const orgs = githubOrgs();
+    if (!orgs.length) return;
+    for (const a of document.querySelectorAll('a[href^="/"]')) {
+      const owner = gh.titleOwner(a.getAttribute("href"));
+      if (!owner || !orgs.includes(owner)) continue;
+      const container = githubResultContainer(a);
+      if (!container || container.dataset.noai) continue;
+      if (container.closest(".noai-filtered")) continue;
+      hide(container, {}, container.textContent, "work repo: " + owner);
+    }
+  }
+
+  function processGitHub() {
+    if (!(settings.hideDev && githubOrgs().length)) {
+      removeBlock();
+      return;
+    }
+    const workOrg = gh.pageWorkOrg(location.pathname, settings.noWorkGitHubOrgs);
+    if (workOrg) {
+      renderBlock(workOrg);
+      return;
+    }
+    removeBlock();
+    filterGitHubList();
+    report();
   }
 
   function activeAdapter() {
@@ -141,6 +191,11 @@
       renderBlock();
       return;
     }
+    // GitHub gets work-org-aware handling (block work repos/orgs, hide them in lists).
+    if (isGitHub()) {
+      processGitHub();
+      return;
+    }
     removeBlock();
     const adapter = activeAdapter();
     if (!adapter) return;
@@ -192,7 +247,7 @@
     hiddenLog.length = 0;
     sessionCount = 0;
     // Re-arm the No-work wall — toggling settings should bring it back even if peeked past.
-    blockDismissed = false;
+    dismissedPath = null;
     removeBlock();
   }
 

@@ -23,6 +23,7 @@ function load(settings) {
   $("keywords").value = settings.keywords.join("\n");
   $("devKeywords").value = (settings.devKeywords || []).join("\n");
   $("noworkSites").value = (settings.noWorkBlockSites || []).join("\n");
+  $("githubOrgs").value = (settings.noWorkGitHubOrgs || []).join("\n");
   $("hideDev").checked = settings.hideDev;
   $("sources").value = (settings.blockedSources || []).join("\n");
   $("generic").checked = settings.genericMode;
@@ -57,6 +58,7 @@ async function init() {
       keywords: linesOf("keywords"),
       devKeywords: linesOf("devKeywords"),
       noWorkBlockSites: linesOf("noworkSites"),
+      noWorkGitHubOrgs: linesOf("githubOrgs"),
       hideDev: $("hideDev").checked,
       blockedSources: linesOf("sources"),
       disabledSites,

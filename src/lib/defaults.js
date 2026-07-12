@@ -162,6 +162,9 @@
     // Hosts that get fully replaced with a reminder overlay while No-work mode is on
     // (instead of per-item filtering). Matched by suffix.
     noWorkBlockSites: ["news.ycombinator.com"],
+    // GitHub work orgs/owners. While No-work mode is on, their org page and repos show
+    // the reminder overlay, and their repos are hidden from GitHub listings.
+    noWorkGitHubOrgs: [],
     // Block whole sources regardless of text: subreddits ("r/ChatGPT"), YouTube
     // channels, or link domains ("the-decoder.de"). Case-insensitive substring match.
     blockedSources: [],
