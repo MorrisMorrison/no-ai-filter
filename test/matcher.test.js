@@ -83,6 +83,10 @@ test("no-work mode: dev keywords catch dev content", () => {
     "debugging a nasty stack trace",
     "he just landed a software engineer role",
     "deploying with Docker and Kubernetes",
+    // regression cases from real YouTube screenshots:
+    'Jr Devs - "I Can\'t Code Anymore"', // via "dev(s)"
+    "Terry Davis – Die schwerste Frage in der Programmierung", // German
+    "The Java Story | Official Trailer | Full Film Coming July 17th",
   ]) {
     assert.ok(matcher.matches(s, c), `expected MATCH: ${s}`);
   }
@@ -97,6 +101,8 @@ test("no-work mode: excluded ambiguous words don't false-positive", () => {
     "a bug flew into the room",
     "the waiter was a great server",
     "just a quick coffee break",
+    "the device won't charge", // "dev" must not match inside "device"
+    "Die Entwicklung der Stadt geht voran", // German city development ≠ Entwickler
   ]) {
     assert.ok(!matcher.matches(s, c), `expected NO match: ${s}`);
   }

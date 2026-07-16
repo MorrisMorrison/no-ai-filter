@@ -8,16 +8,32 @@
     return { ...DEFAULT_SETTINGS, ...(obj || {}) };
   }
 
-  async function getSettings() {
+  async function getRaw() {
     const stored = await chrome.storage.sync.get(KEY);
-    return withDefaults(stored[KEY]);
+    return stored[KEY] || {};
   }
 
-  // Merge a partial patch into the stored settings and persist.
+  async function getSettings() {
+    return withDefaults(await getRaw());
+  }
+
+  // Merge a partial patch into the RAW stored deltas and persist. Only fields the user
+  // actually changed live in storage — everything else falls through to the live
+  // DEFAULT_SETTINGS, so shipped updates to the default keyword lists reach users who
+  // never customized them. A patch value of `undefined` removes the stored override.
   async function setSettings(patch) {
-    const next = { ...(await getSettings()), ...patch };
+    const next = { ...(await getRaw()), ...patch };
+    for (const k of Object.keys(next)) {
+      if (next[k] === undefined) delete next[k];
+    }
     await chrome.storage.sync.set({ [KEY]: next });
-    return next;
+    return withDefaults(next);
+  }
+
+  // Drop ALL stored overrides — settings fall back to live defaults.
+  async function resetSettings() {
+    await chrome.storage.sync.remove(KEY);
+    return withDefaults({});
   }
 
   // Host matching that tolerates www./subdomain differences in both directions, so a
@@ -42,6 +58,7 @@
   NoAI.storage = {
     getSettings,
     setSettings,
+    resetSettings,
     onSettingsChanged,
     matchHost,
     isSiteDisabled,

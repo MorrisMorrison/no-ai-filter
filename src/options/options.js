@@ -40,6 +40,12 @@ function linesOf(id) {
     .filter(Boolean);
 }
 
+// If a list is identical to its shipped default, store `undefined` — that removes the
+// override so future updates to the default lists still reach this user.
+function orDefault(list, defaultList) {
+  return JSON.stringify(list) === JSON.stringify(defaultList) ? undefined : list;
+}
+
 async function init() {
   const settings = await storage.getSettings();
   load(settings);
@@ -54,13 +60,14 @@ async function init() {
       if (!cb.checked) disabledSites.push(cb.dataset.host);
     }
 
+    const d = defaults.DEFAULT_SETTINGS;
     await storage.setSettings({
-      keywords: linesOf("keywords"),
-      devKeywords: linesOf("devKeywords"),
-      noWorkBlockSites: linesOf("noworkSites"),
-      noWorkGitHubOrgs: linesOf("githubOrgs"),
+      keywords: orDefault(linesOf("keywords"), d.keywords),
+      devKeywords: orDefault(linesOf("devKeywords"), d.devKeywords),
+      noWorkBlockSites: orDefault(linesOf("noworkSites"), d.noWorkBlockSites),
+      noWorkGitHubOrgs: orDefault(linesOf("githubOrgs"), d.noWorkGitHubOrgs),
       hideDev: $("hideDev").checked,
-      blockedSources: linesOf("sources"),
+      blockedSources: orDefault(linesOf("sources"), d.blockedSources),
       disabledSites,
       genericMode: $("generic").checked,
       hideGoogleAiOverview: $("aioverview").checked,
@@ -70,7 +77,8 @@ async function init() {
   });
 
   $("reset").addEventListener("click", async () => {
-    const next = await storage.setSettings({ ...defaults.DEFAULT_SETTINGS });
+    // Clears ALL stored overrides — settings fall back to live defaults.
+    const next = await storage.resetSettings();
     load(next);
     flashSaved();
   });

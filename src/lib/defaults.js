@@ -83,6 +83,8 @@
     "codebase",
     "open source",
     "developer",
+    "dev",
+    "coder",
     "DevOps",
     "backend",
     "frontend",
@@ -123,7 +125,18 @@
     "VS Code",
     "Visual Studio",
     "LeetCode",
-    // languages / frameworks (unambiguous ones only)
+    // German (dev feeds are often German)
+    "Programmierung",
+    "programmieren",
+    "Programmierer",
+    "Softwareentwicklung",
+    "Softwareentwickler",
+    "Entwickler",
+    "Informatik",
+    "Quellcode",
+    // languages / frameworks (mostly unambiguous; "Java" accepted here — in an opt-in
+    // aggressive mode the coffee/island collision is a fair trade)
+    "Java",
     "JavaScript",
     "TypeScript",
     "Python",

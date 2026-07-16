@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "No-AI Content Filter",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Hides AI-related posts, videos and results across social feeds, YouTube, and news/search.",
   "permissions": ["storage", "tabs"],
   "icons": {
